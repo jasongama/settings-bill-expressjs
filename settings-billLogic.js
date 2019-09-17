@@ -26,8 +26,7 @@ module.exports = function SettingsBill() {
 
     function recordAction(action) {
 
-        let cost = 0;name="billItemTypeWithSettings" 
-        name="billItemTypeWithSettings" 
+        let cost = 0;
         if (action === 'sms'){
             cost = smsCost;
         }
@@ -37,7 +36,7 @@ module.exports = function SettingsBill() {
 
         actionList.push({
             type: action,
-            cost,
+            cost: cost,
             timestamp: new Date()
         });
     }

@@ -26,6 +26,7 @@ app.get("/", function (req, res) {
     res.render("index", {
         settings: settingsBill.getSettings(),
         totals: settingsBill.totals()
+        
     })
 });
 
@@ -51,11 +52,12 @@ app.post("/action", function (req, res) {
 });
 
 app.get("/actions", function (req, res) {
-
+ res.render("actions", {actions: settingsBill.actions() });
 });
 
-app.get("/actions/:type", function (req, res) {
-
+app.get("/actions/:actiontype", function (req, res) {
+    const actiontype = req.params.actiontype;
+    res.render("actions", {actions: settingsBill.actionsFor(actiontype) });
 });
 
 let PORT = process.env.PORT || 5000;
