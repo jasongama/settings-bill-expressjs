@@ -27,13 +27,17 @@ module.exports = function SettingsBill() {
     function recordAction(action) {
 
         let cost = 0;
+        if(hasReachedCriticalLevel()){
+            return 'danger'
+        }
+        if(!hasReachedCriticalLevel()){
         if (action === 'sms'){
             cost = smsCost;
         }
         else if (action === 'call'){
             cost = callCost;
         }
-
+    }
         actionList.push({
             type: action,
             cost: cost,
@@ -100,11 +104,15 @@ module.exports = function SettingsBill() {
 
     function hasReachedWarningLevel(){
         const total = grandTotal();
-        const reachedWarningLevel = total >= warningLevel 
-            && total < criticalLevel;
-
-        return reachedWarningLevel;
+      if(total >= warningLevel && total<criticalLevel){
+          return "warning"
+      } 
+       else if(total>= criticalLevel){
+        return "danger";
     }
+      }
+
+       
 
     function hasReachedCriticalLevel(){
         const total = grandTotal();

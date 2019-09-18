@@ -25,7 +25,8 @@ app.set('view engine', 'handlebars');
 app.get("/", function (req, res) {
     res.render("index", {
         settings: settingsBill.getSettings(),
-        totals: settingsBill.totals()
+        totals: settingsBill.totals(),
+        levels: settingsBill.hasReachedWarningLevel()
         
     })
 });
@@ -37,6 +38,7 @@ app.post("/settings", function (req, res) {
      smsCost: req.body.smsCost,
      warningLevel: req.body.warningLevel,
      criticalLevel: req.body.criticalLevel
+
  })
 
 
