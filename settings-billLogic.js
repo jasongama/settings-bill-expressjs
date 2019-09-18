@@ -32,17 +32,20 @@ module.exports = function SettingsBill() {
         }
         if(!hasReachedCriticalLevel()){
         if (action === 'sms'){
-            cost = smsCost;
+            cost += smsCost;
         }
         else if (action === 'call'){
-            cost = callCost;
+            cost += callCost;
         }
     }
+    if(action !== undefined ){
         actionList.push({
             type: action,
             cost: cost,
             timestamp: new Date()
+
         });
+    }
     }
 
     function actions(){
