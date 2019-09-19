@@ -1,46 +1,109 @@
-var assert= require("assert");
-var settingsBill =require ("../settings-billLogic");
-describe('settingsBill' , function(){
-   it('It should add numbers of calls made', function() {
-   var set = settingsBill();
-   set.recordAction('call');
-   set.recordAction('call');
-   set.recordAction('call');
-
-  assert.equal(set.actionsFor("call").length,3);
-
- });
-   
-    it('It should add numbers of sms made' , function(){
+var assert = require("assert");
+var settingsBill = require("../settings-billLogic");
+describe('settingsBill', function () {
+    it('It should show numbers of sms made', function () {
         var set = settingsBill();
-        set.recordAction('sms');
-        set.recordAction('sms');
-        set.recordAction('sms');
 
-        assert.equal(set.actionsFor("sms").length, 3)
-    });
-
-    it('It should return danger when the calls or smss reach a cricticalLevel' , function(){
-        var set = settingsBill();
-        set.getSettings({
+        set.setSettings({
             callCost: 3,
             smsCost: 6,
-            warningLevel: 2,
-            criticalLevel: 8
+            warningLevel: 20,
+            criticalLevel: 80
         });
 
         set.recordAction('sms');
-        set.recordAction('sms');
-        set.recordAction('call');
-        set.recordAction('call');
-        set.recordAction('call');
-        set.recordAction('sms');
-        set.recordAction('sms');
-        set.recordAction('call');
-       
-        assert.equal(set.hasReachedCriticalLevel(),true)
+
+
+        assert.deepEqual(set.actions(), [{
+            type: 'sms',
+            cost: 6,
+            timestamp: new Date()
+        }]);
+
     });
-      // it('It should keep track total amounts calls and sms that are made' , function(){
-    //     assert.equal(settingsBill('CL 124,CY 567,L 345, CJ 456,L 341','L'), 1)
-    // });
+
+    it('It should show numbers of call made', function () {
+        var set = settingsBill();
+        set.setSettings({
+            callCost: 6,
+            smsCost: 6,
+            warningLevel: 20,
+            criticalLevel: 80
+        });
+        set.recordAction('call');
+
+
+
+        assert.deepEqual(set.actions("call"), [{
+            type: 'call',
+            cost: 6,
+            timestamp: new Date()
+        }])
+    });
+
+
+    it('It should warn you  if the calls and smss have reach the warninglevel ', function () {
+        var set = settingsBill();
+        set.setSettings({
+            callCost: 3,
+            smsCost: 6,
+            warningLevel: 10,
+            criticalLevel: 30
+        });
+        set.recordAction('call');
+        set.recordAction('call');
+        set.recordAction('sms');
+        set.recordAction('sms');
+
+
+        set.totals()
+        assert.equal(set.hasReachedWarningLevel(), 'warning')
+    });
+    it('It should indicate danger if the calls and smss have reach the cricticallevel ', function () {
+        var set = settingsBill();
+        set.setSettings({
+            callCost: 3,
+            smsCost: 6,
+            warningLevel: 10,
+            criticalLevel: 30
+        });
+        set.recordAction('call');
+        set.recordAction('call');
+        set.recordAction('sms');
+        set.recordAction('sms');
+        set.recordAction('call');
+        set.recordAction('call');
+        set.recordAction('sms');
+        set.recordAction('sms');
+
+
+        set.totals()
+        assert.equal(set.hasReachedWarningLevel(), 'danger')
+    });
+    it('It should calculate the total amount of calls and smss', function () {
+        var set = settingsBill();
+        set.setSettings({
+            callCost: 3,
+            smsCost: 6,
+            warningLevel: 10,
+            criticalLevel: 30
+        });
+        set.recordAction('call');
+        set.recordAction('call');
+        set.recordAction('sms');
+        set.recordAction('sms');
+        set.recordAction('call');
+        set.recordAction('call');
+        set.recordAction('sms');
+        set.recordAction('sms');
+
+
+
+        assert.deepEqual(set.totals(), {
+            smsTotal: 18,
+            callTotal: 12,
+            grandTotal: 30
+        })
+    });
+
 });
