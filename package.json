@@ -2,9 +2,10 @@
   "name": "jas",
   "version": "1.0.0",
   "description": "",
-  "main": "jas.js",
+  "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",
